@@ -3,6 +3,7 @@ package com.sfb.task.controllers;
 import com.sfb.task.exceptions.AccountNotFound;
 import com.sfb.task.exceptions.ApiException;
 import com.sfb.task.exceptions.NotEnoughBalance;
+import com.sfb.task.exceptions.SameAccountForbidden;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -25,7 +26,17 @@ public class ControllersAdvice {
     }
 
     @ExceptionHandler(NotEnoughBalance.class)
-    public ResponseEntity<Object> userNotFound(NotEnoughBalance exception){
+    public ResponseEntity<Object> notEnoughBalance(NotEnoughBalance exception){
+        ApiException apiException = new ApiException(
+                exception.getMessage(),
+                HttpStatus.BAD_REQUEST,
+                ZonedDateTime.now(ZoneId.of("Z"))
+        );
+        return new ResponseEntity<>(apiException, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SameAccountForbidden.class)
+    public ResponseEntity<Object> sameAccountForbidden(SameAccountForbidden exception){
         ApiException apiException = new ApiException(
                 exception.getMessage(),
                 HttpStatus.BAD_REQUEST,

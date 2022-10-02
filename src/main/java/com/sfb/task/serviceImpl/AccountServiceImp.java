@@ -5,6 +5,7 @@ import com.sfb.task.entities.Account;
 import com.sfb.task.entities.Transaction;
 import com.sfb.task.exceptions.AccountNotFound;
 import com.sfb.task.exceptions.NotEnoughBalance;
+import com.sfb.task.exceptions.SameAccountForbidden;
 import com.sfb.task.mappers.AccountMapper;
 import com.sfb.task.repositories.AccountRepository;
 import com.sfb.task.repositories.TransactionRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -88,6 +90,9 @@ public class AccountServiceImp implements AccountService {
     @Override
     @Transactional
     public void transferBalance(Long accountId1, Long accountId2, BigDecimal amount) {
+        if (Objects.equals(accountId1, accountId2)){
+            throw new SameAccountForbidden();
+        }
         withdrawBalance(accountId1, amount);
         addBalance(accountId2, amount);
     }
