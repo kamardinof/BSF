@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  transaction-server:
+    image: transfer-service-app
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - /data/transfer-service-app
+    ports:
+      - "8081:8081"
